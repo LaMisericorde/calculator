@@ -1,0 +1,29 @@
+body {
+    display: flex;
+    justify-content: center;
+}
+
+.calculator-container {
+    border: 2px solid black;
+}
+
+.display-container {
+    width: 400px;
+    height: 200px;
+}
+
+.button-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 80px;
+    width: 400px;
+}
+
+.zero {
+    grid-column: 1/3;
+}
+
+.equal {
+    grid-column: 4/5;
+    grid-row: 4/6;
+}
