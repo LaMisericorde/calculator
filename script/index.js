@@ -1,10 +1,3 @@
-// Variables
-
-// let firstNumber;
-// let secondNumber;
-// let operator;
-
-
 // Operations:
 
 function add(a, b) {
@@ -23,78 +16,59 @@ function divide(a, b) {
     return a / b;
 }
 
-// Operate function
-
-function operate(operator, a, b) {
-    let result;
-    switch(operator) {
-        case "adition":
-            result =  add(a, b);
-            break;
-        case "subtraction":
-            result =  subtract(a, b);
-            break;
-        case "multiplication":
-            result = multiply(a, b);
-            break;
-        case "division":
-            result = divide(a, b);
-            break;
-        default:
-            result =  "Eroor";
-    }
-    return result;
-}
-
-
 // Testing
 
 let operandNumber = 1;
-let firstNumberString = "";
-let secondNumberString = "";
+let operatorName = "";
 
-const currentDsiplay = document.querySelector(".current-display");
-const firstOperand = document.querySelector(".first-operand");
-const secondOperand = document.querySelector(".second-operand");
-const operator = document.querySelector(".operator-display");
+const lastOperationDisplay = document.querySelector(".last-display");
+
+const firstOperandDisplay = document.querySelector(".first-operand");
+const secondOperandDisplay = document.querySelector(".second-operand");
+const operatorDisplay = document.querySelector(".operator-display");
 
 const numberButtons = document.querySelectorAll(".number");
+const operatorButtons = document.querySelectorAll(".operator");
+const equalButton = document.querySelector(".equal");
+const clearButton = document.querySelector(".clear");
+
+// Number Buttons
 
 numberButtons.forEach((button) => {
     button.addEventListener("click", () => {
-        addNumberToDisplay(button);
+        addNumberToDisplay(button);       
     });
 });
+
+// Based on the format of the last operation display we search for a space to see if it has the form (operand operator operand) or not;
 
 function addNumberToDisplay(button) {
     if (operandNumber == 1) {
-        if (firstNumberString.length < 15) {
+        if (lastOperationDisplay.textContent.indexOf(" ") >= 0) {
+            lastOperationDisplay.textContent = firstOperandDisplay.textContent;
+            firstOperandDisplay.textContent = button.textContent
+        } else {
             if (checkIfNumberStartsWithZero(button)) {
-                firstOperand.textContent = firstOperand.textContent + button.textContent;
-                firstNumberString = firstOperand.textContent;
+                firstOperandDisplay.textContent = firstOperandDisplay.textContent + button.textContent;   
             }
-
         }
     } else if (operandNumber == 2) {
-        if (secondNumberString.length < 15) {
-            if (checkIfNumberStartsWithZero(button)) {
-                secondOperand.textContent = secondOperand.textContent + button.textContent;
-                secondNumberString = secondOperand.textContent;
-            }
+        if (checkIfNumberStartsWithZero(button)) {
+            secondOperandDisplay.textContent = secondOperandDisplay.textContent + button.textContent;
         }
     }
 }
+
 
 function checkIfNumberStartsWithZero(button) {
     if (operandNumber == 1) {
-        if (firstNumberString == "0" && (button.textContent == "0")) {
+        if (firstOperandDisplay.textContent == "0" && (button.textContent == "0")) {
             return 0;
         } else {
             return 1;
         }
-    }
-    if (operandNumber == 2) {
-        if (secondNumberString == "0" && (button.textContent == "0")) {
+    } else if (operandNumber == 2) {
+        if (secondOperandDisplay.textContent == "0" && (button.textContent == "0")) {
             return 0;
         } else {
             return 1;
@@ -102,70 +76,89 @@ function checkIfNumberStartsWithZero(button) {
     }
 }
 
-const operators = document.querySelectorAll(".operator");
 
-operators.forEach((button) => {
+// Operator Buttons
+
+operatorButtons.forEach((button) => {
     button.addEventListener("click", () => {
-        nextTerm(button);
+        if (firstOperandDisplay.textContent != "") {
+            changeToSecondOperand();
+            operatorDisplay.textContent = button.textContent;
+            operatorName = getOperatorName(button);
+        }
     });
 });
 
-function nextTerm(button) {
-    if (operandNumber == 1) {
-        operator.textContent = button.textContent;
+// Get the operator by its class not by its content:
+
+function getOperatorName(button) {
+    button.classList.remove("operator");
+    let operator = button.getAttribute("class");
+    button.classList.add("operator");
+    return operator;
+}
+
+function changeToSecondOperand() {
+    if (operandNumber == 1) {        
         operandNumber = 2;
     }
 }
 
+// Calculate
 
-const equal = document.querySelector(".equal");
-equal.addEventListener("click", () => {
-    calculate();
+equalButton.addEventListener("click", () => {
+    operate();
 });
 
-function calculate() {
-    if (operandNumber == 2 && (secondNumberString != "")) {
-        let firstNumber = +firstNumberString;
-        let secondNumber = +secondNumberString;
-        switch(operator.textContent) {
-            case "+":
-                displayLast()
-                firstOperand.textContent = operate("adition", firstNumber, secondNumber);
+function operate() {
+    if (operandNumber == 2 && (secondOperandDisplay.textContent != "")) {
+        let firstNumber = +firstOperandDisplay.textContent;
+        let secondNumber = +secondOperandDisplay.textContent;
+        switch(operatorName) {
+            case "adition":
+                displayLastOperation()
+                firstOperandDisplay.textContent = add(firstNumber, secondNumber);
                 reset();
                 break;
-            case "-":
-                displayLast()
-                firstOperand.textContent = operate("subtraction", firstNumber, secondNumber);
+            case "subtraction":
+                displayLastOperation()
+                firstOperandDisplay.textContent = subtract(firstNumber, secondNumber);
                 reset();
                 break;
-            case "×":
-                displayLast()
-                firstOperand.textContent = operate("multiplication", firstNumber, secondNumber);
+            case "multiplication":
+                displayLastOperation()
+                firstOperandDisplay.textContent = multiply(firstNumber, secondNumber);
                 reset();
                 break;
-            case "÷":
-                displayLast()
-                firstOperand.textContent = operate("division", firstNumber, secondNumber);
+            case "division":
+                displayLastOperation()
+                firstOperandDisplay.textContent = divide(firstNumber, secondNumber);
                 reset();
                 break;
             default:
-                console.log("error");
+                console.log("Error");
         }
     }
 }
 
-const lastDisplay = document.querySelector(".last-display");
-
-function displayLast() {
-    lastDisplay.textContent = `${firstOperand.textContent} ${operator.textContent} ${secondOperand.textContent}`;
+function displayLastOperation() {
+    lastOperationDisplay.textContent = `${firstOperandDisplay.textContent} ${operatorDisplay.textContent} ${secondOperandDisplay.textContent}`;
 }
-
 
 function reset() {
     operandNumber = 1;
-    operator.textContent = "";
-    secondOperand.textContent = "";
+    operatorDisplay.textContent = "";
+    secondOperandDisplay.textContent = "";
 }
+
+// Clear Button
+
+clearButton.addEventListener("click", () => {
+    reset();
+    firstOperandDisplay.textContent = "";
+    lastOperationDisplay.textContent = "";
+});
+
 
 
 
