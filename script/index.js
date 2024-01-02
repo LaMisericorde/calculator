@@ -203,5 +203,19 @@ clearButton.addEventListener("click", () => {
 // Sign Button
 
 
-
+signButton.addEventListener("click", () => {
+    if (operandNumber == 1) {
+        if (firstOperandDisplay.textContent.charAt(0) == "-") {
+            firstOperandDisplay.textContent = firstOperandDisplay.textContent.slice(1);
+        } else {
+            firstOperandDisplay.textContent = "-" + firstOperandDisplay.textContent;
+        }
+    } else if (operandNumber == 2) {
+        if (secondOperandDisplay.textContent.charAt(0) == "-") {
+            secondOperandDisplay.textContent = secondOperandDisplay.textContent.slice(1);
+        } else {
+            secondOperandDisplay.textContent = "-" + secondOperandDisplay.textContent;
+        }
+    }
+});
 
