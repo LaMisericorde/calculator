@@ -34,12 +34,12 @@ const equalButton = document.querySelector(".equal");
 const signButton = document.querySelector(".sign");
 const clearButton = document.querySelector(".clear");
 
-
 // Number Buttons
 
 numberButtons.forEach((button) => {
     button.addEventListener("click", () => {
-        addNumberToDisplay(button);       
+        addNumberToDisplay(button);    
+        removeFirstZero(button);   
     });
 });
 
@@ -48,7 +48,7 @@ periodButton.addEventListener("click", () => {
         if (checkIfNumberStartsWithPeriod()) {
             if (firstOperandDisplay.textContent != "") {
                 if (!(firstOperandDisplay.textContent.indexOf(".") >= 0)) {
-                    firstOperandDisplay.textContent = firstOperandDisplay.textContent + periodButton.textContent;
+                    firstOperandDisplay.textContent = firstOperandDisplay.textContent + periodButton.textContent;                    
                 }
             }
         }
@@ -117,6 +117,17 @@ function checkIfNumberStartsWithPeriod() {
     }
 }
 
+function removeFirstZero(button) {
+    if (operandNumber == 1) {
+        if (firstOperandDisplay.textContent.charAt(0) == "0" && firstOperandDisplay.textContent.charAt(1) != ".") {
+            firstOperandDisplay.textContent = "" + button.textContent;
+        }
+    } else if (operandNumber == 2) {
+        if (secondOperandDisplay.textContent.charAt(0) == "0" && secondOperandDisplay.textContent.charAt(1) != ".") {
+            secondOperandDisplay.textContent = "" + button.textContent;
+        }
+    }
+}
 
 // Operator Buttons
 
